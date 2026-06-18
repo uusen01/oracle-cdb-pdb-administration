@@ -1,0 +1,25 @@
+# SQL*Plus / SQLcl run artifacts
+*.log
+*.lst
+*.trc
+*.spool
+spool/
+
+# PDB unplug manifests / datafiles must never be committed
+*.xml
+*.dbf
+*.pdb
+
+# Local connection details / secrets
+tnsnames.ora
+sqlnet.ora
+*.env
+login.sql
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/

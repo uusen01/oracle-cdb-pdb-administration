@@ -1,0 +1,31 @@
+SQL> @undo_configuration.sql
+
+==================== UNDO MODE (LOCAL vs SHARED) =======================
+
+PROPERTY_NAME              PROPERTY_VALUE
+-------------------------- ----------------
+LOCAL_UNDO_ENABLED         TRUE
+
+ (TRUE = LOCAL undo per PDB ; FALSE = SHARED undo in the root)
+
+==================== UNDO TABLESPACES BY CONTAINER =====================
+
+PDB_NAME             TABLESPACE_NAME        CONTENTS     STATUS           GB
+-------------------- ---------------------- ------------ ---------- ---------
+CDB$ROOT             UNDOTBS1               UNDO         ONLINE         8.00
+SALES_PDB            UNDOTBS1               UNDO         ONLINE        12.00
+RPT_PDB              UNDOTBS1               UNDO         ONLINE         6.00
+MAINT_PDB            UNDOTBS1               UNDO         ONLINE         2.00
+
+==================== UNDO_TABLESPACE PARAMETER (ROOT) ==================
+
+NAME                 VALUE
+-------------------- --------------------
+undo_management      AUTO
+undo_tablespace      UNDOTBS1
+
+-- Read: LOCAL undo is enabled (the 12.2+ default), so each PDB has its own UNDO
+-- tablespace -- confirmed: the root and all three PDBs each show one ONLINE UNDO
+-- tablespace. Local undo is what enables PDB hot clone, relocate, and flashback PDB, so
+-- this configuration is correct for an environment that uses those operations.
+-- SALES_PDB's 12 GB undo matches its heavier OLTP write workload.

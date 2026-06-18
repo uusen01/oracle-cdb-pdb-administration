@@ -1,0 +1,27 @@
+SQL> @list_pdbs.sql
+
+===================== PLUGGABLE DATABASES (LIVE) =======================
+
+    CON_ID PDB_NAME               OPEN_MODE    RESTRICTED OPEN_TIME            SAVED_STATE
+---------- ---------------------- ------------ ---------- -------------------- ------------
+         2 PDB$SEED               READ ONLY    NO         2026-06-02 03:14     NONE
+         3 SALES_PDB              READ WRITE   NO         2026-06-02 03:15     OPEN
+         4 RPT_PDB                MOUNTED      NO                              NONE
+         5 MAINT_PDB              READ WRITE   YES        2026-06-02 03:15     OPEN
+
+===================== PDB METADATA (DBA_PDBS) =========================
+
+    CON_ID PDB_NAME             STATUS      CREATION_SCN
+---------- -------------------- ----------- ------------
+         2 PDB$SEED             NORMAL          1900111
+         3 SALES_PDB            NORMAL          2455870
+         4 RPT_PDB              NORMAL          2455921
+         5 MAINT_PDB            NORMAL          3011255
+
+(open_mode MOUNTED + saved_state NONE = will NOT auto-open on restart.
+ Use save_pdb_state.sql to make it auto-open.)
+
+-- Read: RPT_PDB is MOUNTED with SAVED_STATE=NONE -- it did NOT auto-open after the last
+-- CDB restart, which is why its applications can't connect. SALES_PDB is healthy
+-- (OPEN + saved). MAINT_PDB is open but RESTRICTED (maintenance). Fix RPT_PDB: open it
+-- (open_all_pdbs.sql) then save its state (save_pdb_state.sql) so it auto-opens next time.

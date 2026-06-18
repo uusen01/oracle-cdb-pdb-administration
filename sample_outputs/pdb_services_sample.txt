@@ -1,0 +1,29 @@
+SQL> @pdb_services.sql
+
+================= DEFINED SERVICES BY PDB (CDB_SERVICES) ===============
+
+PDB_NAME               SERVICE_NAME                       NETWORK_NAME                       OPEN_MODE
+---------------------- ---------------------------------- ---------------------------------- ------------
+SALES_PDB              sales_pdb                          sales_pdb.example.local            READ WRITE
+SALES_PDB              sales_app_svc                      sales_app_svc.example.local        READ WRITE
+RPT_PDB                rpt_pdb                            rpt_pdb.example.local              READ WRITE
+RPT_PDB                rpt_ro_svc                         rpt_ro_svc.example.local           READ WRITE
+MAINT_PDB              maint_pdb                          maint_pdb.example.local            READ WRITE
+
+============= SERVICES CURRENTLY REGISTERED (V$SERVICES) ==============
+
+    CON_ID SERVICE_NAME                       NETWORK_NAME
+---------- ---------------------------------- ----------------------------------
+         3 sales_pdb                          sales_pdb.example.local
+         3 sales_app_svc                      sales_app_svc.example.local
+         4 rpt_pdb                            rpt_pdb.example.local
+         4 rpt_ro_svc                         rpt_ro_svc.example.local
+         5 maint_pdb                          maint_pdb.example.local
+
+(A PDB with no application service registered cannot be reached by its apps even
+ when OPEN -- check here if connections fail after a clone/relocate.)
+
+-- Read: each PDB has its default service plus a custom app service, and all are
+-- registered (defined services match registered services). After the RPT_PDB fix its
+-- services are back -- note rpt_ro_svc, a read-only reporting service. If an app could
+-- not connect, a missing row here would point straight at the cause.

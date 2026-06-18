@@ -1,0 +1,19 @@
+SQL> @pdb_tablespaces.sql
+
+================= TABLESPACE USAGE PER PDB (FROM ROOT) =================
+
+PDB_NAME           TABLESPACE_NAME         ALLOC_GB      USED_GB       MAX_GB PCT_USED_OF_MAX STATUS_F
+------------------ -------------------- ----------- ------------ ------------ --------------- --------
+SALES_PDB          SALES_DATA               150.00       139.80       160.00            87.4 ALERT
+RPT_PDB            RPT_DATA                  48.00        31.10        96.00            32.4 OK
+SALES_PDB          SALES_INDEX               28.00        19.40        48.00            40.4 OK
+SALES_PDB          SYSAUX                     4.00         3.05         8.00            38.1 OK
+RPT_PDB            SYSAUX                     3.50         2.40         8.00            30.0 OK
+MAINT_PDB          USERS                      2.00         0.40        16.00             2.5 OK
+
+(status_flag = ALERT means PCT_USED_OF_MAX >= 85% inside that PDB.)
+
+-- Read: SALES_DATA inside SALES_PDB is at 87% of its autoextend ceiling -- act today
+-- (add a datafile or raise MAXSIZE) before inserts fail with ORA-01653 inside that PDB.
+-- Everything else has headroom. The value here: one query from the root caught a
+-- space problem buried inside a specific container without logging into each PDB.

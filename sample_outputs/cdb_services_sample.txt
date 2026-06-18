@@ -1,0 +1,30 @@
+SQL> @cdb_services.sql
+
+===================== SERVICE COUNT BY CONTAINER =======================
+
+CONTAINER                 CNT
+-------------------- --------
+CDB$ROOT                    2
+MAINT_PDB                   1
+RPT_PDB                     2
+SALES_PDB                   2
+
+============ ALL DEFINED SERVICES (ROOT + PDBs) + RUNNING ==============
+
+CONTAINER            SERVICE_NAME                       NETWORK_NAME                       RUNNING
+-------------------- ---------------------------------- ---------------------------------- -------
+CDB$ROOT             ORADEMO                            ORADEMO.example.local              YES
+CDB$ROOT             ORADEMOXDB                         ORADEMOXDB.example.local           YES
+SALES_PDB            sales_pdb                          sales_pdb.example.local            YES
+SALES_PDB            sales_app_svc                      sales_app_svc.example.local        YES
+RPT_PDB              rpt_pdb                            rpt_pdb.example.local              YES
+RPT_PDB              rpt_ro_svc                         rpt_ro_svc.example.local           YES
+MAINT_PDB            maint_pdb                          maint_pdb.example.local            YES
+
+(running = NO means the service is defined but not currently registered with the
+ listener -- expected for some internal services, investigate for app services.)
+
+-- Read: the full connection topology of the CDB in one view -- the root's own service
+-- (ORADEMO) plus each PDB's default and app services, all registered (RUNNING=YES). This
+-- is the container-level audit you run after consolidation/clone to confirm every PDB is
+-- reachable and no stray service lingers. All clean here.

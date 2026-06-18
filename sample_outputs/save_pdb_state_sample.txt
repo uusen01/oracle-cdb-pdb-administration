@@ -1,0 +1,31 @@
+SQL> @save_pdb_state.sql
+
+================ BEFORE: EXISTING SAVED STATES ========================
+
+    CON_ID CON_NAME             STATE
+---------- -------------------- ------------
+         3 SALES_PDB            OPEN
+         5 MAINT_PDB            OPEN
+
+================ ENSURE PDBs ARE OPEN IN DESIRED MODE =================
+SQL> ALTER PLUGGABLE DATABASE ALL OPEN;
+Pluggable database altered.
+
+================ SAVE OPEN STATE (AUTO-OPEN ON RESTART) ===============
+SQL> ALTER PLUGGABLE DATABASE ALL SAVE STATE;
+Pluggable database altered.
+
+================ AFTER: CONFIRM SAVED STATES ==========================
+
+    CON_ID CON_NAME             STATE
+---------- -------------------- ------------
+         3 SALES_PDB            OPEN
+         4 RPT_PDB              OPEN
+         5 MAINT_PDB            OPEN
+
+(PDBs with a saved OPEN state will now auto-open on the next CDB startup.)
+
+-- Read: RPT_PDB (con_id 4) now has a saved OPEN state alongside the others. This is the
+-- durable fix for the recurring "PDB not open after restart" outage: on the next CDB
+-- bounce, all three PDBs auto-open and applications connect with no manual step. This is
+-- the single most valuable habit in multitenant operations.

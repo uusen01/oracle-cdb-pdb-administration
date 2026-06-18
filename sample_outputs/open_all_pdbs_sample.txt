@@ -1,0 +1,29 @@
+SQL> @open_all_pdbs.sql
+
+===================== BEFORE: CURRENT PDB STATE ========================
+
+    CON_ID NAME                 OPEN_MODE    RESTRICTED
+---------- -------------------- ------------ ----------
+         2 PDB$SEED             READ ONLY    NO
+         3 SALES_PDB            READ WRITE   NO
+         4 RPT_PDB              MOUNTED      NO
+         5 MAINT_PDB            READ WRITE   YES
+
+===================== OPENING ALL MOUNTED PDBs ========================
+SQL> ALTER PLUGGABLE DATABASE ALL OPEN;
+Pluggable database altered.
+
+===================== AFTER: CONFIRM OPEN MODE ========================
+
+    CON_ID NAME                 OPEN_MODE    RESTRICTED
+---------- -------------------- ------------ ----------
+         2 PDB$SEED             READ ONLY    NO
+         3 SALES_PDB            READ WRITE   NO
+         4 RPT_PDB              READ WRITE   NO
+         5 MAINT_PDB            READ WRITE   YES
+
+(If you want these to auto-open after the next CDB restart, run save_pdb_state.sql.)
+
+-- Read: RPT_PDB moved from MOUNTED to READ WRITE -- applications can now connect. The
+-- already-open PDBs were left untouched (ALL OPEN is safe to re-run). This restored
+-- service, but it is only a fix until the next restart; save the state to make it stick.

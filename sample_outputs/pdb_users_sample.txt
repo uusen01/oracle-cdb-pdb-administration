@@ -1,0 +1,28 @@
+SQL> @pdb_users.sql
+
+============== USER COUNT BY CONTAINER AND SCOPE ======================
+
+PDB_NAME             SCOPE          CNT
+-------------------- -------- ---------
+SALES_PDB            COMMON          14
+SALES_PDB            LOCAL            6
+RPT_PDB              COMMON          14
+RPT_PDB              LOCAL            3
+MAINT_PDB            COMMON          14
+
+========= LOCAL APPLICATION ACCOUNTS BY PDB (NON-ORACLE-MAINTAINED) =========
+
+PDB_NAME             USERNAME                   COMMON  ACCOUNT_STATUS
+-------------------- -------------------------- ------- ------------------
+SALES_PDB            SALES_OWNER                NO      OPEN
+SALES_PDB            SALES_APP                  NO      OPEN
+SALES_PDB            SALES_RO                   NO      OPEN
+RPT_PDB              RPT_OWNER                  NO      OPEN
+RPT_PDB              RPT_READER                 NO      OPEN
+C##MONITOR                                      YES     OPEN
+
+-- Read: the COMMON count (14) is identical across PDBs -- those are Oracle-maintained
+-- common accounts present in every container. The LOCAL accounts are the real
+-- application schemas, isolated per PDB (SALES_OWNER only exists in SALES_PDB). One
+-- user-created common account, C##MONITOR, spans all PDBs -- confirm its privileges are
+-- intentional, since a common user's grants reach every container.

@@ -1,0 +1,35 @@
+SQL> @cdb_parameters.sql
+
+============ KEY PARAMETERS (ROOT) + PDB-MODIFIABLE FLAG ==============
+
+NAME                               VALUE                                    ISPDB_MODIFIABLE
+---------------------------------- ---------------------------------------- ----------------
+cpu_count                          16                                       TRUE
+db_cache_size                      0                                        TRUE
+enable_pluggable_database          TRUE                                     FALSE
+max_pdbs                           254                                      TRUE
+open_cursors                       500                                      TRUE
+optimizer_mode                     ALL_ROWS                                 TRUE
+pga_aggregate_target               8589934592                               TRUE
+processes                          600                                      FALSE
+sessions                           922                                      FALSE
+sga_target                         25769803776                              TRUE
+undo_tablespace                    UNDOTBS1                                 TRUE
+
+====== EXAMPLE: ONE PARAMETER COMPARED ACROSS ALL PDBs (CONTAINERS) =====
+
+    CON_ID PDB_NAME             PDB_VALUE
+---------- -------------------- ----------------------------------------
+         1 CDB$ROOT             ALL_ROWS
+         3 SALES_PDB            ALL_ROWS
+         4 RPT_PDB              FIRST_ROWS_10
+         5 MAINT_PDB            ALL_ROWS
+
+(ISPDB_MODIFIABLE=TRUE means a PDB can override the root value. Use ALTER SYSTEM
+ ... while connected to that PDB to set a PDB-local value.)
+
+-- Read: RPT_PDB has overridden optimizer_mode to FIRST_ROWS_10 while every other
+-- container uses the root default ALL_ROWS. That is a deliberate reporting-PDB tweak --
+-- but it is exactly the kind of hidden, container-local override that explains "why does
+-- this one PDB behave differently?" Note processes/sessions are NOT pdb-modifiable, so
+-- they are set once at the CDB level.

@@ -1,0 +1,15 @@
+SQL> @pdb_size.sql
+
+======================= PDB SIZE BREAKDOWN ============================
+
+    CON_ID PDB_NAME                DATA_GB     TEMP_GB    TOTAL_GB PCT_OF_CDB
+---------- ---------------------- --------- ----------- ---------- ----------
+         3 SALES_PDB                 184.50       16.00     200.50       71.2
+         4 RPT_PDB                    58.20        8.00      66.20       22.5
+         5 MAINT_PDB                  12.10        2.00      14.10        4.7
+         2 PDB$SEED                    3.90        0.50       4.40        1.5
+
+-- Read: SALES_PDB dominates the CDB at 71% of permanent data (184 GB) -- the OLTP
+-- workload. RPT_PDB is the reporting copy at 22%. As SALES_PDB grows it may warrant its
+-- own Resource Manager plan (so a heavy report in RPT_PDB can't starve it) or relocation
+-- to its own CDB. This consolidated view comes only from the root via CDB_* views.
