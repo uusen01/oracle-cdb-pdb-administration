@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="screenshots/oracle-cdb-pdb-administration-banner.png" width="100%">
+</p>
+
 # Oracle CDB/PDB Administration
 
 A focused toolkit of **read-only SQL scripts** and operational guides for administering
